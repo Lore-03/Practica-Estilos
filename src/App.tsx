@@ -1,29 +1,34 @@
-import { useState, useEffect } from 'react'
+// importación de useEffect para crear el efecto de los personajes
+// importación de button en la carpeta de UI button para traer el componente button
+// importación de card en la carpeta de UI card para traer el componente card
+// importación de AppLayout en la carpeta de AppLayout para traer el componente AppLayout
+// importación de MenubarSection en la carpeta de MenubarSection para traer el componente MenubarSection
+// importación de InputsSection en la carpeta de InputsSection para traer el componente InputsSection
+// importación de CharactersSection en la carpeta de CharactersSection para traer el componente CharactersSection
+// importación de CardsSection en la carpeta de CardsSection para traer el componente CardsSection
+// importación de useCharacters para traer los personajes
+import { useEffect } from 'react'
 import { Button } from './components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './components/ui/card'
-import { Input } from './components/ui/input'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from './components/ui/carousel'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card'
+import { AppLayout } from './components/AppLayout'
+import { MenubarSection } from './sections/MenubarSection'
+import { InputsSection } from './sections/InputsSection'
+import { CharactersSection } from './sections/CharactersSection'
+import { CardsSection } from './sections/CardsSection'
 import { useCharacters } from '../api/resource'
-import type { Character } from '../api/resource'
-import { ApiTest } from './ApiTest'
 
 function App() {
-  const [inputValue, setInputValue] = useState('')
-  
-  // Usar el hook SIN filtros iniciales para evitar el loop
+  // useCharacters para traer los personajes
   const { characters, loading, error, fetchCharacters } = useCharacters();
-
-  // Logs para depuración
+  // useEffect para crear el efecto de los personajes
+  // Cargar personajes automáticamente al montar el componente
   useEffect(() => {
     console.log('🎬 App component montado');
+    console.log('🔄 Cargando personajes automáticamente...');
+    fetchCharacters({ page: 1 });
   }, []);
 
+  // useEffect para crear el efecto de los personajes
   useEffect(() => {
     console.log('📊 Estado de personajes actualizado:', {
       charactersCount: characters.length,
@@ -38,72 +43,28 @@ function App() {
     loading,
     error: error || 'Sin error'
   });
-
-  // Función para cargar personajes manualmente
-  const handleLoadCharacters = async () => {
-    console.log('🔄 Cargando personajes manualmente...');
-    await fetchCharacters({ page: 1 });
-  };
-
+  // return para crear el App
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+    // AppLayout para crear el App
+    <AppLayout> 
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🎨 Demostración de Estilos
-          </h1>
-          <p className="text-gray-600">
-            Probando componentes de shadcn/ui con diferentes variantes y estilos
-          </p>
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-2 ">🎨 Demostración de Estilos</h1>
+          <p className="text-gray-600 dark:text-gray-300 ">Probando componentes</p>
         </div>
-
-        {/* Prueba de API */}
-        <Card className="mb-8">
+        {/* MenubarSection para crear el Menubar */}
+        <MenubarSection />
+        {/* Card para crear el Card */}
+        <Card className="mb-8 dark:bg-gray-800 dark:border-gray-700 ">
           <CardHeader>
-            <CardTitle>Prueba de API</CardTitle>
-            <CardDescription>
-              Componente para diagnosticar problemas con la API
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ApiTest />
-          </CardContent>
-        </Card>
-
-        {/* Botón para cargar personajes */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Cargar Personajes</CardTitle>
-            <CardDescription>
-              Haz clic para cargar los personajes de Rick and Morty
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={handleLoadCharacters}
-              disabled={loading}
-              className="w-full"
-            >
-              {loading ? 'Cargando...' : 'Cargar Personajes'}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Botones */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Botones</CardTitle>
-            <CardDescription>
-              Diferentes variantes y tamaños de botones
-            </CardDescription>
+            <CardTitle className="dark:text-white">Botones</CardTitle>
+            <CardDescription className="dark:text-gray-300">Diferentes variantes y tamaños de botones</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-4">
               <Button variant="default">Default</Button>
               <Button variant="secondary">Secondary</Button>
             </div>
-            
             <div className="flex flex-wrap gap-4">
               <Button size="sm">Small</Button>
               <Button size="default">Default</Button>
@@ -111,162 +72,11 @@ function App() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Inputs */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Campos de Entrada</CardTitle>
-            <CardDescription>
-              Diferentes tipos de inputs
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Input normal</label>
-                <Input 
-                  placeholder="Escribe algo aquí..." 
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Input con valor</label>
-                <Input 
-                  placeholder="Campo deshabilitado" 
-                  disabled 
-                  value="Valor fijo"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Carousel con personajes de Rick and Morty */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Personajes de Rick and Morty</CardTitle>
-            <CardDescription>
-              Carrusel con personajes reales de la API
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="text-center py-8">
-                <p className="text-gray-600">Cargando personajes...</p>
-                <p className="text-sm text-gray-500 mt-2">Estado: {loading ? 'Cargando' : 'Completado'}</p>
-              </div>
-            ) : error ? (
-              <div className="text-center py-8">
-                <p className="text-red-600">Error: {error}</p>
-                <p className="text-sm text-gray-500 mt-2">Revisa la consola para más detalles</p>
-              </div>
-            ) : characters.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-600">No se encontraron personajes</p>
-                <p className="text-sm text-gray-500 mt-2">Personajes cargados: {characters.length}</p>
-                <p className="text-sm text-gray-500">Haz clic en "Cargar Personajes" para comenzar</p>
-              </div>
-            ) : (
-              <Carousel className="w-full max-w-2xl mx-auto">
-                <CarouselContent>
-                  {characters.slice(0, 10).map((character: Character) => (
-                    <CarouselItem key={character.id}>
-                      <div className="p-1">
-                        <Card className="border-0 shadow-lg overflow-hidden">
-                          <CardContent className="p-0">
-                            <div className="relative">
-                              <img 
-                                src={character.image} 
-                                alt={character.name}
-                                className="w-full h-48 object-cover"
-                              />
-                              <div className="absolute top-2 right-2">
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  character.status === 'Alive' ? 'bg-green-500 text-white' :
-                                  character.status === 'Dead' ? 'bg-red-500 text-white' :
-                                  'bg-gray-500 text-white'
-                                }`}>
-                                  {character.status}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="p-4">
-                              <h3 className="text-lg font-bold mb-1">{character.name}</h3>
-                              <p className="text-sm text-gray-600 mb-2">{character.species}</p>
-                              <p className="text-xs text-gray-500">
-                                <strong>Origen:</strong> {character.origin.name}
-                              </p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Cards de ejemplo */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Card 1</CardTitle>
-              <CardDescription>Descripción del primer card</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Este es el contenido del primer card. Aquí puedes poner cualquier información.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full">Acción</Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Card 2</CardTitle>
-              <CardDescription>Descripción del segundo card</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Este es el contenido del segundo card. Cada card puede tener contenido diferente.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">Acción Secundaria</Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Card 3</CardTitle>
-              <CardDescription>Descripción del tercer card</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Este es el contenido del tercer card. Los cards son muy versátiles.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button variant="destructive" className="w-full">Eliminar</Button>
-            </CardFooter>
-          </Card>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8 pt-8 border-t border-gray-200">
-          <p className="text-gray-500">
-            ✨ Creado con React + Vite + shadcn/ui + Rick and Morty API
-          </p>
-        </div>
+        <InputsSection />
+        <CharactersSection />
+        <CardsSection />
       </div>
-    </div>
+    </AppLayout>
   )
 }
 
