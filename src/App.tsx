@@ -7,50 +7,57 @@
 // importación de CharactersSection en la carpeta de CharactersSection para traer el componente CharactersSection
 // importación de CardsSection en la carpeta de CardsSection para traer el componente CardsSection
 // importación de useCharacters para traer los personajes
-import { useEffect } from 'react'
-import { Button } from './components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card'
-import { AppLayout } from './components/AppLayout'
-import { MenubarSection } from './sections/MenubarSection'
-import { InputsSection } from './sections/InputsSection'
-import { CharactersSection } from './sections/CharactersSection'
-import { CardsSection } from './sections/CardsSection'
-import { useCharacters } from '../api/resource'
+import { useEffect, useState } from "react";
+import { Button } from "./components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
+import { AppLayout } from "./components/AppLayout";
+import { MenubarSection } from "./sections/MenubarSection";
+import { InputsSection } from "./sections/InputsSection";
+import { CharactersSection } from "./sections/CharactersSection";
+import { CardsSection } from "./sections/CardsSection";
+import { useCharacters as useCharactersHook } from "@/hooks/use_characters";
 
 function App() {
+  const { allCharacters, characters } = useCharactersHook();
   // useCharacters para traer los personajes
-  const { characters, loading, error, fetchCharacters } = useCharacters();
+  /*   const { characters, loading, error, fetchCharacters } = useCharacters(); */
+  const [page /* setPage */] = useState(1);
   // useEffect para crear el efecto de los personajes
   // Cargar personajes automáticamente al montar el componente
   useEffect(() => {
-    console.log('🎬 App component montado');
-    console.log('🔄 Cargando personajes automáticamente...');
-    fetchCharacters({ page: 1 });
-  }, []);
+    console.log("🎬 App component montado");
+    console.log("🔄 Cargando personajes automáticamente...");
+    allCharacters({ page });
+  }, [allCharacters, page]);
 
-  // useEffect para crear el efecto de los personajes
+  /*   // useEffect para crear el efecto de los personajes
   useEffect(() => {
-    console.log('📊 Estado de personajes actualizado:', {
+    console.log("📊 Estado de personajes actualizado:", {
       charactersCount: characters.length,
       loading,
       error,
-      firstCharacter: characters[0]?.name || 'Ninguno'
+      firstCharacter: characters[0]?.name || "Ninguno",
     });
-  }, [characters, loading, error]);
+  }, [characters, loading, error]); */
 
-  console.log('🎨 App renderizando con:', {
-    charactersCount: characters.length,
-    loading,
-    error: error || 'Sin error'
-  });
   // return para crear el App
   return (
     // AppLayout para crear el App
-    <AppLayout> 
+    <AppLayout>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-2 ">🎨 Demostración de Estilos</h1>
-          <p className="text-gray-600 dark:text-gray-300 ">Probando componentes</p>
+          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-2 ">
+            🎨 Demostración de Estilos
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300 ">
+            Probando componentes
+          </p>
         </div>
         {/* MenubarSection para crear el Menubar */}
         <MenubarSection />
@@ -58,7 +65,9 @@ function App() {
         <Card className="mb-8 dark:bg-gray-800 dark:border-gray-700 ">
           <CardHeader>
             <CardTitle className="dark:text-white">Botones</CardTitle>
-            <CardDescription className="dark:text-gray-300">Diferentes variantes y tamaños de botones</CardDescription>
+            <CardDescription className="dark:text-gray-300">
+              Diferentes variantes y tamaños de botones
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-4">
@@ -77,7 +86,7 @@ function App() {
         <CardsSection />
       </div>
     </AppLayout>
-  )
+  );
 }
 
-export default App
+export default App;
